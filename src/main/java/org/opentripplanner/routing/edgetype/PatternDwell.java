@@ -51,7 +51,11 @@ public class PatternDwell extends TablePatternEdge implements OnboardEdge, Dwell
 
     public State traverse(State state0) {
         //int trip = state0.getTrip();
+        final RoutingRequest options = state0.getOptions();
         TripTimes tripTimes = state0.getTripTimes();
+        if (options.bannedDepartures != null && options.bannedDepartures.matches(tripTimes, stopIndex)) {
+            return null;
+        }
         int dwellTime = tripTimes.getDwellTime(stopIndex);
         StateEditor s1 = state0.edit(this);
         s1.setBackMode(getMode());

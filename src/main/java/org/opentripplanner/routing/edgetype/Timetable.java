@@ -15,6 +15,7 @@ import org.opentripplanner.model.Stop;
 import org.opentripplanner.model.Trip;
 import org.opentripplanner.model.calendar.ServiceDate;
 import org.opentripplanner.common.MavenVersion;
+import org.opentripplanner.routing.core.RoutingRequest;
 import org.opentripplanner.routing.core.ServiceDay;
 import org.opentripplanner.routing.core.State;
 import org.opentripplanner.routing.core.StopTransfer;
@@ -158,6 +159,7 @@ public class Timetable implements Serializable {
      */
     public TripTimes getNextTrip(State s0, ServiceDay serviceDay, int stopIndex, boolean boarding, double flexOffsetScale,
                                  int flexPreBoardDirectTime, int flexPostAlightDirectTime) {
+        RoutingRequest options = s0.getOptions();
         /* Search at the state's time, but relative to midnight on the given service day. */
         int time = serviceDay.secondsSinceMidnight(s0.getTimeSeconds());
         // NOTE the time is sometimes negative here. That is fine, we search for the first trip of the day.
@@ -205,6 +207,10 @@ public class Timetable implements Serializable {
                 if (depTime < 0) continue; // negative values were previously used for canceled trips/passed stops/skipped stops, but
                                            // now its not sure if this check should be still in place because there is a boolean field
                                            // for canceled trips
+                // check if this departure is banned
+                if (options.bannedDepartures != null
+                        && options.bannedDepartures.matches(tt, stopIndex)) continue;
+
                 if (depTime >= adjustedTime && depTime < bestTime) {
                     bestTrip = tt;
                     bestTime = depTime;
@@ -245,7 +251,10 @@ public class Timetable implements Serializable {
             LOG.debug("  running freq {}", freq);
             if (boarding) {
                 int depTime = freq.nextDepartureTime(stopIndex, adjustedTime); // min transfer time included in search
-                if (depTime < 0) continue; 
+                if (depTime < 0) continue;
+                // check if this departure is banned
+                if (options.bannedDepartures != null
+                        && options.bannedDepartures.matches(tt.timeShift(stopIndex, depTime, boarding), stopIndex)) continue;
                 if (depTime >= adjustedTime && depTime < bestTime) {
                     bestFreq = freq;
                     bestTime = depTime;

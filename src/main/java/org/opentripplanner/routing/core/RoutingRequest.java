@@ -617,6 +617,12 @@ public class RoutingRequest implements Cloneable, Serializable {
      */
     public long clockTimeSec;
 
+    /**
+     * Do not use certain departures. This effectively interrupts trips at the {@link org.opentripplanner.routing.edgetype.PatternDwell}
+     * edge before the specified departure.
+     */
+    public PatternDepartureMatcher bannedDepartures = PatternDepartureMatcher.emptyMatcher();
+
     /* CONSTRUCTORS */
 
     /** Constructor for options; modes defaults to walk and transit */

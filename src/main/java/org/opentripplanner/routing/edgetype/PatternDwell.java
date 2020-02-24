@@ -3,6 +3,7 @@ package org.opentripplanner.routing.edgetype;
 import java.util.Locale;
 import org.opentripplanner.gtfs.GtfsLibrary;
 import org.opentripplanner.routing.core.RoutingRequest;
+import org.opentripplanner.routing.core.ServiceDay;
 import org.opentripplanner.routing.core.State;
 import org.opentripplanner.routing.core.StateEditor;
 import org.opentripplanner.routing.core.TraverseMode;
@@ -53,7 +54,8 @@ public class PatternDwell extends TablePatternEdge implements OnboardEdge, Dwell
         //int trip = state0.getTrip();
         final RoutingRequest options = state0.getOptions();
         TripTimes tripTimes = state0.getTripTimes();
-        if (options.bannedDepartures != null && options.bannedDepartures.matches(tripTimes, stopIndex)) {
+        ServiceDay serviceDay = state0.getServiceDay();
+        if (options.bannedDepartures != null && options.bannedDepartures.matches(serviceDay, tripTimes, stopIndex)) {
             return null;
         }
         int dwellTime = tripTimes.getDwellTime(stopIndex);

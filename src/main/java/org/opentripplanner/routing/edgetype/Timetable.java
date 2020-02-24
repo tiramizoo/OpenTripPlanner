@@ -209,7 +209,7 @@ public class Timetable implements Serializable {
                                            // for canceled trips
                 // check if this departure is banned
                 if (options.bannedDepartures != null
-                        && options.bannedDepartures.matches(tt, stopIndex)) continue;
+                        && options.bannedDepartures.matches(serviceDay, tt, stopIndex)) continue;
 
                 if (depTime >= adjustedTime && depTime < bestTime) {
                     bestTrip = tt;
@@ -254,7 +254,7 @@ public class Timetable implements Serializable {
                 if (depTime < 0) continue;
                 // check if this departure is banned
                 if (options.bannedDepartures != null
-                        && options.bannedDepartures.matches(tt.timeShift(stopIndex, depTime, boarding), stopIndex)) continue;
+                        && options.bannedDepartures.matches(serviceDay, tt.timeShift(stopIndex, depTime, boarding), stopIndex)) continue;
                 if (depTime >= adjustedTime && depTime < bestTime) {
                     bestFreq = freq;
                     bestTime = depTime;

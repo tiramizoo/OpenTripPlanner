@@ -241,7 +241,7 @@ public class TransitBoardAlight extends TablePatternEdge implements OnboardEdge 
 
             /* Check if route and/or agency are banned or whitelisted for this pattern */
             if (options.routeIsBanned(this.getPattern().route)) return null;
-            
+
             /*
              * Find the next boarding/alighting time relative to the current State. Check lists of
              * transit serviceIds running yesterday, today, and tomorrow relative to the initial
@@ -281,6 +281,11 @@ public class TransitBoardAlight extends TablePatternEdge implements OnboardEdge 
                 }
             }
             if (bestWait < 0) return null; // no appropriate trip was found
+
+            // check if this departure is banned
+            if (options.bannedDepartures != null && options.bannedDepartures.matches(bestServiceDay, bestTripTimes, stopIndex))
+                return null;
+
             Trip trip = bestTripTimes.trip;
 
             /* Found a trip to board. Now make the child state. */

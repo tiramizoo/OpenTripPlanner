@@ -207,10 +207,6 @@ public class Timetable implements Serializable {
                 if (depTime < 0) continue; // negative values were previously used for canceled trips/passed stops/skipped stops, but
                                            // now its not sure if this check should be still in place because there is a boolean field
                                            // for canceled trips
-                // check if this departure is banned
-                if (options.bannedDepartures != null
-                        && options.bannedDepartures.matches(serviceDay, tt, stopIndex)) continue;
-
                 if (depTime >= adjustedTime && depTime < bestTime) {
                     bestTrip = tt;
                     bestTime = depTime;
@@ -252,9 +248,6 @@ public class Timetable implements Serializable {
             if (boarding) {
                 int depTime = freq.nextDepartureTime(stopIndex, adjustedTime); // min transfer time included in search
                 if (depTime < 0) continue;
-                // check if this departure is banned
-                if (options.bannedDepartures != null
-                        && options.bannedDepartures.matches(serviceDay, tt.timeShift(stopIndex, depTime, boarding), stopIndex)) continue;
                 if (depTime >= adjustedTime && depTime < bestTime) {
                     bestFreq = freq;
                     bestTime = depTime;

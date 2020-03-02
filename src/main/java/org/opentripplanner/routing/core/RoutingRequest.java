@@ -1022,6 +1022,7 @@ public class RoutingRequest implements Cloneable, Serializable {
             clone.whiteListedRoutes = whiteListedRoutes.clone();
             clone.preferredAgencies = (HashSet<String>) preferredAgencies.clone();
             clone.preferredRoutes = preferredRoutes.clone();
+            clone.bannedDepartures = bannedDepartures.clone();
             if (this.bikeWalkingOptions != this)
                 clone.bikeWalkingOptions = this.bikeWalkingOptions.clone();
             else

@@ -115,8 +115,14 @@ final public class TemporaryPartialStreetEdge extends StreetWithElevationEdge im
             other = ((TemporaryPartialStreetEdge) e).parentEdge;
         }
 
-        // TODO(flamholz): is there a case where a partial edge has a reverse of its own?
-        return parentEdge.isReverseOf(other);
+        // mkoetter: race condition seems to happen here
+        synchronized (this) {
+            if (parentEdge != null) {
+                // TODO(flamholz): is there a case where a partial edge has a reverse of its own?
+                return parentEdge.isReverseOf(other);
+            }
+            return false;
+        }
     }
 
     @Override

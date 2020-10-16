@@ -73,7 +73,7 @@ final public class TemporaryPartialStreetEdge extends StreetWithElevationEdge im
      */
     @Override
     public int getId() {
-        return parentEdge.getId();
+        return parentEdge != null ? parentEdge.getId() : 0;
     }
 
     /**
@@ -81,7 +81,7 @@ final public class TemporaryPartialStreetEdge extends StreetWithElevationEdge im
      */
     @Override
     public int getInAngle() {
-        return parentEdge.getInAngle();
+        return parentEdge != null ? parentEdge.getInAngle() : 0;
     }
 
     /**
@@ -89,7 +89,7 @@ final public class TemporaryPartialStreetEdge extends StreetWithElevationEdge im
      */
     @Override
     public int getOutAngle() {
-        return parentEdge.getInAngle();
+        return parentEdge != null ? parentEdge.getInAngle() : 0;
     }
 
     /**
@@ -115,19 +115,13 @@ final public class TemporaryPartialStreetEdge extends StreetWithElevationEdge im
             other = ((TemporaryPartialStreetEdge) e).parentEdge;
         }
 
-        // mkoetter: race condition seems to happen here
-        synchronized (this) {
-            if (parentEdge != null) {
-                // TODO(flamholz): is there a case where a partial edge has a reverse of its own?
-                return parentEdge.isReverseOf(other);
-            }
-            return false;
-        }
+        // TODO(flamholz): is there a case where a partial edge has a reverse of its own?
+        return parentEdge != null && parentEdge.isReverseOf(other);
     }
 
     @Override
     public boolean isRoundabout() {
-        return parentEdge.isRoundabout();
+        return parentEdge != null && parentEdge.isRoundabout();
     }
 
     /**
